@@ -39,6 +39,7 @@ class UserCreateInput {
 export class UserResolver {
   @FieldResolver()
   async posts(@Root() user: User, @Ctx() ctx: Context): Promise<Post[] | null> {
+    // @ts-ignore
     return ctx.prisma.user
       .findUnique({
         where: {

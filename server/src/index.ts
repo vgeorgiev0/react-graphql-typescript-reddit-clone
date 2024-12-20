@@ -16,6 +16,7 @@ import {
   SortOrder,
 } from '../resolvers/PostResolver';
 import { UserResolver } from '../resolvers/UserResolver';
+
 const serverPort = Number(process.env.SERVER_PORT) || 4000;
 
 const main = async () => {
@@ -41,7 +42,7 @@ const main = async () => {
     '/graphql',
     cors<cors.CorsRequest>(),
     express.json(),
-    // @ts-ignore
+    // @ts-expect-error
     expressMiddleware(server, {
       context: async ({
         req,
@@ -50,7 +51,6 @@ const main = async () => {
         req: express.Request;
         res: express.Response;
       }) => {
-        // @ts-ignore
         return context({ req, res });
       },
     })
@@ -62,15 +62,6 @@ const main = async () => {
     res.send('Hello World!');
   });
   console.log(`🚀 Server ready at http://localhost:${serverPort}/graphql`);
-
-  //   const { url } = await startStandaloneServer(server, {
-  //     context: async () => context,
-  //     listen: { port: serverPort },
-  //   });
-
-  //   console.log(`
-  // 🚀 Server ready at: ${url}
-  // ⭐️  See sample queries: http://pris.ly/e/ts/graphql-typegraphql#using-the-graphql-api`);
 };
 
 main();

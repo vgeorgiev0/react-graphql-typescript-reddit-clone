@@ -82,23 +82,22 @@ export class PostResolver {
     });
   }
 
-  // @Mutation((returns) => Post)
-  // async createDraft(
-  //   @Arg('data') data: PostCreateInput,
-  //   @Arg('authorEmail') authorEmail: string,
+  @Mutation((returns) => Post)
+  async createDraft(
+    @Arg('data') data: PostCreateInput,
+    @Arg('authorEmail') authorEmail: string,
 
-  //   @Ctx() ctx: Context
-  // ) {
-  //   return ctx.prisma.post.create({
-  //     data: {
-  //       title: data.title,
-  //       content: data.content,
-  //       author: {
-  //         connect: { email: authorEmail },
-  //       },
-  //     },
-  //   });
-  // }
+    @Ctx() ctx: Context
+  ) {
+    return ctx.prisma.post.create({
+      data: {
+        title: data.title,
+        author: {
+          connect: { email: authorEmail },
+        },
+      },
+    });
+  }
 
   @Mutation((returns) => Post, { nullable: true })
   async togglePublishPost(
