@@ -1,3 +1,4 @@
+import { context } from './../src/context';
 import 'reflect-metadata';
 import {
   Resolver,
@@ -117,20 +118,51 @@ export class PostResolver {
     });
   }
 
-  // @Mutation((returns) => Post, { nullable: true })
-  // async incrementPostViewCount(
-  //   @Arg('id', (type) => Int) id: number,
-  //   @Ctx() ctx: Context
-  // ) {
-  //   return ctx.prisma.post.update({
-  //     where: { id: id || undefined },
-  //     // data: {
-  //     //   viewCount: {
-  //     //     increment: 1,
-  //     //   },
-  //     // },
-  //   });
-  // }
+  @Mutation((returns) => Post, { nullable: true })
+  async incrementPostViewCount(
+    @Arg('id', (type) => Int) id: number,
+    @Ctx() ctx: Context
+  ) {
+    return ctx.prisma.post.update({
+      where: { id: id || undefined },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+    });
+  }
+
+  @Mutation(() => Post)
+  createPost(
+    @Arg('data') data: PostCreateInput,
+    @Arg('authorEmail') authorEmail: string,
+    @Ctx() ctx: Context
+  ) {
+    return ctx.prisma.post.create({
+      data: {
+        title: data.title,
+        author: {
+          connect: { email: authorEmail },
+        },
+      },
+    });
+  }
+  @Mutation(() => Post)
+  updatePost(
+    @Arg('data') data: PostCreateInput,
+    @Arg('postId') postId: number,
+    @Ctx() ctx: Context
+  ) {
+    return ctx.prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        title: data.title,
+      },
+    });
+  }
 
   @Mutation((returns) => Post, { nullable: true })
   async deletePost(@Arg('id', (type) => Int) id: number, @Ctx() ctx: Context) {
