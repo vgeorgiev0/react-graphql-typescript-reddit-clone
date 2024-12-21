@@ -1,4 +1,3 @@
-import { context } from './../src/context';
 import 'reflect-metadata';
 import {
   Resolver,
@@ -12,9 +11,10 @@ import {
   InputType,
   Field,
 } from 'type-graphql';
-import { Post } from './Post';
-import { User } from './User';
-import { Context } from '../src/context';
+import { Post } from '../models/Post';
+import { User } from '../models/User';
+import { Context } from '../../../context';
+
 @InputType()
 export class PostCreateInput {
   @Field()

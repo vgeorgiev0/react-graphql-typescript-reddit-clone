@@ -14,8 +14,8 @@ import {
   PostCreateInput,
   PostResolver,
   SortOrder,
-} from '../resolvers/PostResolver';
-import { UserResolver } from '../resolvers/UserResolver';
+} from './db/gql/resolvers/PostResolver';
+import { UserResolver } from './db/gql/resolvers/UserResolver';
 
 const serverPort = Number(process.env.SERVER_PORT) || 4000;
 
