@@ -17,4 +17,13 @@ export class User {
 
   @Field((type) => [Post], { nullable: true })
   posts?: [Post] | null;
+
+  @Field((type) => String)
+  createdAt: Date;
+
+  @Field((type) => String)
+  updatedAt: Date;
+
+  @Field((type) => String)
+  password: string;
 }
