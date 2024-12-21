@@ -5,25 +5,24 @@ import { Post } from './Post';
 
 @ObjectType()
 export class User {
-  @Field((type) => ID)
+  @Field((_) => ID)
   id: number;
 
   @Field()
   @IsEmail()
-  email: string;
+  email!: string;
 
-  @Field((type) => String, { nullable: true })
-  name?: string | null;
+  @Field((_) => String, { nullable: false })
+  name!: string | null;
 
-  @Field((type) => [Post], { nullable: true })
+  @Field((_) => [Post], { nullable: true })
   posts?: [Post] | null;
 
-  @Field((type) => String)
+  @Field((_) => String)
   createdAt: Date;
 
-  @Field((type) => String)
+  @Field((_) => String)
   updatedAt: Date;
 
-  @Field((type) => String)
-  password: string;
+  password!: string;
 }

@@ -13,7 +13,7 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   password  String
-  name      String?
+  name      String   @unique
   posts     Post[]
 }
 
@@ -25,6 +25,6 @@ model Post {
   content   String?
   published Boolean  @default(false)
   viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
 }

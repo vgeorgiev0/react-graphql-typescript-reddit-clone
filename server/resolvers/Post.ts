@@ -4,13 +4,13 @@ import { User } from './User';
 
 @ObjectType()
 export class Post {
-  @Field((type) => ID)
+  @Field((_) => ID)
   id: number;
 
-  @Field((type) => Date)
+  @Field((_) => Date)
   createdAt: Date;
 
-  @Field((type) => Date)
+  @Field((_) => Date)
   updatedAt: Date;
 
   @Field()
@@ -19,9 +19,9 @@ export class Post {
   @Field()
   published: boolean;
 
-  @Field((type) => User, { nullable: true })
+  @Field((_) => User)
   author: User;
 
-  @Field({ nullable: true })
+  @Field()
   authorId: number;
-}
+} 

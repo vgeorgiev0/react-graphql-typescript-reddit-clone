@@ -28,7 +28,7 @@ class UserCreateInput {
   @Field()
   email: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: false })
   name: string;
 
   @Field((type) => [PostCreateInput], { nullable: true })
@@ -40,18 +40,6 @@ class UserCreateInput {
 
 @Resolver(User)
 export class UserResolver {
-  @FieldResolver()
-  async posts(@Root() user: User, @Ctx() ctx: Context): Promise<Post[] | null> {
-    // @ts-ignore
-    return ctx.prisma.user
-      .findUnique({
-        where: {
-          id: user.id,
-        },
-      })
-      .posts();
-  }
-
   @Mutation((returns) => User)
   async signupUser(
     @Arg('data') data: UserCreateInput,

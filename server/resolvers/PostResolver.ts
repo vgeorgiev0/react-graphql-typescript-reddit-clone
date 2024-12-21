@@ -114,7 +114,7 @@ export class PostResolver {
 
     return ctx.prisma.post.update({
       where: { id: id || undefined },
-      data: { published: !post?.published },
+      data: { published: !post?.published, updatedAt: new Date() },
     });
   }
 
@@ -126,6 +126,7 @@ export class PostResolver {
     return ctx.prisma.post.update({
       where: { id: id || undefined },
       data: {
+        updatedAt: new Date(),
         viewCount: {
           increment: 1,
         },
