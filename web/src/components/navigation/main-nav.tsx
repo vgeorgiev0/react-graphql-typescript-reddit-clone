@@ -28,18 +28,18 @@ export function MainNav() {
         >
           Home
         </Link>
-        {/* <Link
-          href='/docs/components'
+        <Link
+          href='/register'
           className={cn(
             'transition-colors hover:text-foreground/80',
-            pathname?.startsWith('/docs/components') &&
-              !pathname?.startsWith('/docs/component/chart')
+            pathname?.startsWith('/register')
               ? 'text-foreground'
               : 'text-foreground/80'
           )}
         >
-          Components
+          Register
         </Link>
+        {/*
         <Link
           href='/blocks'
           className={cn(
