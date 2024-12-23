@@ -59,7 +59,7 @@ export class UserResolver {
   @Mutation((_) => UserResponse)
   async register(
     @Arg('data') data: UserRegisterOrLoginInput,
-    @Ctx() ctx: Context
+    @Ctx() { prisma, req }: Context
   ): Promise<UserResponse> {
     const passwordHash = await argon2.hash(data.password);
 
@@ -84,7 +84,7 @@ export class UserResolver {
         ],
       };
     }
-    const existingUser = await ctx.prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: {
         username: data.username,
       },
@@ -100,7 +100,7 @@ export class UserResolver {
         ],
       };
     } else {
-      const user = await ctx.prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           username: data.username,
           password: passwordHash,
@@ -114,9 +114,9 @@ export class UserResolver {
   @Mutation((_) => UserResponse)
   async login(
     @Arg('data') data: UserRegisterOrLoginInput,
-    @Ctx() ctx: Context
+    @Ctx() { prisma, req }: Context
   ): Promise<UserResponse> {
-    const user = await ctx.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         username: data.username,
       },
@@ -145,6 +145,9 @@ export class UserResolver {
         ],
       };
     }
+
+    req.session.userId = String(user.id);
+    console.log(req.session);
 
     return { user };
   }

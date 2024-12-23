@@ -18,3 +18,15 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - 5050:80
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - /Users/ValentinG/redis/dаta:/root/redis
+      - /Users/ValentinG/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DATABASES=${REDIS_DATABASES}
