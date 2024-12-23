@@ -63,6 +63,27 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const passwordHash = await argon2.hash(data.password);
 
+    if (data.username.length <= 2) {
+      return {
+        errors: [
+          {
+            message: 'Username must be greater than 2 characters',
+            field: 'username',
+          },
+        ],
+      };
+    }
+    if (data.password.length <= 6) {
+      //TODO: Add password validation
+      return {
+        errors: [
+          {
+            message: 'Password must be greater than 6 characters',
+            field: 'password',
+          },
+        ],
+      };
+    }
     const existingUser = await ctx.prisma.user.findUnique({
       where: {
         username: data.username,
