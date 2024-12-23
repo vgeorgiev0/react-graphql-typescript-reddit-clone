@@ -8,12 +8,12 @@ export class User {
   @Field((_) => ID)
   id: number;
 
-  @Field()
-  @IsEmail()
-  email!: string;
+  // @Field()
+  // @IsEmail()
+  // email!: string;
 
   @Field((_) => String, { nullable: false })
-  name!: string | null;
+  username!: string | null;
 
   @Field((_) => [Post], { nullable: true })
   posts?: [Post] | null;

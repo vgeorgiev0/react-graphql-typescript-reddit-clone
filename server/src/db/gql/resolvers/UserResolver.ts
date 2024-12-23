@@ -19,16 +19,16 @@ class UserUniqueInput {
   id: number;
 
   @Field({ nullable: true })
-  email: string;
+  username: string;
 }
 
 @InputType()
 class UserCreateInput {
-  @Field()
-  email: string;
+  // @Field()
+  // email: string;
 
   @Field(() => String, { nullable: false })
-  name: string;
+  username: string;
 
   @Field((type) => [PostCreateInput], { nullable: true })
   posts: [PostCreateInput];
@@ -50,8 +50,7 @@ export class UserResolver {
 
     return ctx.prisma.user.create({
       data: {
-        email: data.email,
-        name: data.name,
+        username: data.username,
         password: data.password,
         posts: {
           create: postData,
@@ -74,7 +73,7 @@ export class UserResolver {
       .findUnique({
         where: {
           id: userUniqueInput.id || undefined,
-          email: userUniqueInput.email || undefined,
+          username: userUniqueInput.username || undefined,
         },
       })
       .posts({

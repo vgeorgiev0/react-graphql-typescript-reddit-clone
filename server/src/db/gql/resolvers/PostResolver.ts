@@ -86,7 +86,7 @@ export class PostResolver {
   @Mutation((returns) => Post)
   async createDraft(
     @Arg('data') data: PostCreateInput,
-    @Arg('authorEmail') authorEmail: string,
+    @Arg('authorUsername') authorUsername: string,
 
     @Ctx() ctx: Context
   ) {
@@ -94,7 +94,7 @@ export class PostResolver {
       data: {
         title: data.title,
         author: {
-          connect: { email: authorEmail },
+          connect: { username: authorUsername },
         },
       },
     });
@@ -137,14 +137,14 @@ export class PostResolver {
   @Mutation(() => Post)
   createPost(
     @Arg('data') data: PostCreateInput,
-    @Arg('authorEmail') authorEmail: string,
+    @Arg('authorUsername') authorUsername: string,
     @Ctx() ctx: Context
   ) {
     return ctx.prisma.post.create({
       data: {
         title: data.title,
         author: {
-          connect: { email: authorEmail },
+          connect: { username: authorUsername },
         },
       },
     });
