@@ -53,7 +53,7 @@ class UserRegisterOrLoginInput {
   @Field()
   password: string;
 }
-
+// TODO: Add try catch block to handle errors
 @Resolver(User)
 export class UserResolver {
   @Mutation((_) => UserResponse)
@@ -156,10 +156,17 @@ export class UserResolver {
     return { user };
   }
 
-  @Query(() => User, { nullable: true })
+  @Query(() => UserResponse)
   async me(@Ctx() { prisma, req }: Context) {
     if (!req.session.userId) {
-      return null;
+      return {
+        errors: [
+          {
+            message: 'User not authenticated',
+            field: 'user',
+          },
+        ],
+      };
     }
 
     return prisma.user.findUnique({
