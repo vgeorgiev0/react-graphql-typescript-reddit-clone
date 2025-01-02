@@ -62,6 +62,7 @@ const main = async () => {
     cors<cors.CorsRequest>({
       origin: [
         `http://localhost:${serverPort}`,
+        `http://localhost:3000`,
         `http://localhost:${serverPort}/graphql`,
       ],
       credentials: true,
