@@ -18,10 +18,10 @@ import argon2 from 'argon2';
 @ObjectType()
 class ErrorResponse {
   @Field()
-  message: string;
+  message!: string;
 
   @Field()
-  field: string;
+  field!: string;
 }
 
 @ObjectType()
@@ -36,10 +36,10 @@ class UserResponse {
 @InputType()
 class UserUniqueInput {
   @Field({ nullable: true })
-  id: number;
+  id!: number;
 
   @Field({ nullable: true })
-  username: string;
+  username!: string;
 }
 
 @InputType()
@@ -48,10 +48,10 @@ class UserRegisterOrLoginInput {
   // email: string;
 
   @Field(() => String)
-  username: string;
+  username!: string;
 
   @Field()
-  password: string;
+  password!: string;
 }
 // TODO: Add try catch block to handle errors
 @Resolver(User)

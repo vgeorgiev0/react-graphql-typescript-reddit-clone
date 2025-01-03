@@ -3,7 +3,7 @@
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { useState, useEffect } from 'react';
 import { Provider } from 'urql';
-import { client, ssrCache } from '@/urqlClient';
+import { client } from '@/urqlClient';
 
 function ThemeProvider({
   children,

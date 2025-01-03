@@ -5,23 +5,23 @@ import { User } from './User';
 @ObjectType()
 export class Post {
   @Field((_) => ID)
-  id: number;
+  id!: number;
 
   @Field((_) => Date)
-  createdAt: Date;
+  createdAt!: Date;
 
   @Field((_) => Date)
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @Field()
-  title: string;
+  title!: string;
 
   @Field()
-  published: boolean;
+  published!: boolean;
 
   @Field((_) => User)
-  author: User;
+  author!: User;
 
   @Field()
-  authorId: number;
+  authorId!: number;
 } 

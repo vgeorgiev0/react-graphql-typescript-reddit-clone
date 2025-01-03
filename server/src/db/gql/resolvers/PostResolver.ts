@@ -18,16 +18,16 @@ import { Context } from '../../../context';
 @InputType()
 export class PostCreateInput {
   @Field()
-  title: string;
+  title!: string;
 
   @Field({ nullable: true })
-  content: string;
+  content!: string;
 }
 
 @InputType()
 class PostOrderByUpdatedAtInput {
   @Field((type) => SortOrder)
-  updatedAt: SortOrder;
+  updatedAt!: SortOrder;
 }
 
 export enum SortOrder {

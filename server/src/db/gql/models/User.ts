@@ -6,7 +6,7 @@ import { Post } from './Post';
 @ObjectType()
 export class User {
   @Field((_) => ID)
-  id: number;
+  id!: number;
 
   // @Field()
   // @IsEmail()
@@ -19,10 +19,10 @@ export class User {
   posts?: [Post] | null;
 
   @Field((_) => String)
-  createdAt: Date;
+  createdAt!: Date;
 
   @Field((_) => String)
-  updatedAt: Date;
+  updatedAt!: Date;
 
   password!: string;
 }
