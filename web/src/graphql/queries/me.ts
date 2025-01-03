@@ -1,6 +1,6 @@
-import { gql } from 'urql';
+import { graphql } from '@/gql';
 
-export const Me = gql`
+export const Me = graphql(/* GraphQL */ `
   query Me {
     me {
       errors {
@@ -15,4 +15,4 @@ export const Me = gql`
       }
     }
   }
-`;
+`);

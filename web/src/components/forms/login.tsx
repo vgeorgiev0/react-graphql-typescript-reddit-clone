@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { useMutation } from 'urql';
 import { Login } from '@/graphql/mutations/login';
 import { toErrorMap } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const loginSchema = z.object({
   username: z.string().min(2).max(30),
@@ -37,6 +38,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -81,6 +83,7 @@ export function LoginForm() {
       ),
     });
     setLoading(false);
+    router.push('/');
   }
 
   return (

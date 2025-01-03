@@ -17,10 +17,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '../ui/button';
 import { PasswordInput } from '../ui/password-input';
 import { useState } from 'react';
-import { useMutation, useQuery } from 'urql';
+import { useMutation } from 'urql';
 import { Register } from '@/graphql/mutations/register';
 import { toast } from '@/hooks/use-toast';
 import { toErrorMap } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const profileRegisterSchema = z
   .object({
@@ -38,20 +39,21 @@ const profileRegisterSchema = z
     }
   });
 
-type ProfileFormValues = z.infer<typeof profileRegisterSchema>;
+type RegisterFormValues = z.infer<typeof profileRegisterSchema>;
 
 // This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
+const defaultValues: Partial<RegisterFormValues> = {
   username: '',
   password: '',
   repeatPassword: '',
 };
 
-export function ProfileForm() {
+export function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [state, executeMutation] = useMutation(Register);
+  const router = useRouter();
 
-  const form = useForm<ProfileFormValues>({
+  const form = useForm<RegisterFormValues>({
     resolver: zodResolver(profileRegisterSchema),
     defaultValues,
     mode: 'onChange',
@@ -59,7 +61,7 @@ export function ProfileForm() {
 
   const { control, handleSubmit, setError } = form;
 
-  async function onSubmit(data: ProfileFormValues) {
+  async function onSubmit(data: RegisterFormValues) {
     setLoading(true);
     const dataToSubmit = {
       username: data.username,
@@ -74,13 +76,14 @@ export function ProfileForm() {
     if (response.data?.register.errors) {
       const errorMap = toErrorMap(response.data.register.errors);
       Object.keys(errorMap).forEach((field) => {
-        setError(field as keyof ProfileFormValues, {
+        setError(field as keyof RegisterFormValues, {
           type: 'validate',
           message: errorMap[field],
         });
       });
       return;
     }
+
     toast({
       title: 'You have successfully registered! with the following username',
       description: (
@@ -92,6 +95,7 @@ export function ProfileForm() {
       ),
     });
     setLoading(false);
+    router.push('/');
   }
 
   return (

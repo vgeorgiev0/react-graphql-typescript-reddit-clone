@@ -16,6 +16,10 @@ export const docsConfig: DocsConfig = {
       title: 'Register',
       href: '/register',
     },
+    {
+      title: 'Login',
+      href: '/login',
+    },
     // {
     //   title: 'Components',
     //   href: '/docs/components/accordion',

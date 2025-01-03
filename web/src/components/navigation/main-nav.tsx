@@ -6,9 +6,15 @@ import { usePathname } from 'next/navigation';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 import { Icons } from '../ui/icons';
+import { useQuery } from 'urql';
+import { Me } from '@/graphql/queries/me';
 
 export function MainNav() {
   const pathname = usePathname();
+
+  const [{ fetching, data }] = useQuery({ query: Me });
+
+  if (fetching) return null;
 
   return (
     <div className='mr-4 hidden md:flex'>
@@ -28,63 +34,32 @@ export function MainNav() {
         >
           Home
         </Link>
-        <Link
-          href='/register'
-          className={cn(
-            'transition-colors hover:text-foreground/80',
-            pathname?.startsWith('/register')
-              ? 'text-foreground'
-              : 'text-foreground/80'
-          )}
-        >
-          Register
-        </Link>
-        {/*
-        <Link
-          href='/blocks'
-          className={cn(
-            'transition-colors hover:text-foreground/80',
-            pathname?.startsWith('/blocks')
-              ? 'text-foreground'
-              : 'text-foreground/80'
-          )}
-        >
-          Blocks
-        </Link>
-        <Link
-          href='/charts'
-          className={cn(
-            'transition-colors hover:text-foreground/80',
-            pathname?.startsWith('/docs/component/chart') ||
-              pathname?.startsWith('/charts')
-              ? 'text-foreground'
-              : 'text-foreground/80'
-          )}
-        >
-          Charts
-        </Link>
-        <Link
-          href='/themes'
-          className={cn(
-            'transition-colors hover:text-foreground/80',
-            pathname?.startsWith('/themes')
-              ? 'text-foreground'
-              : 'text-foreground/80'
-          )}
-        >
-          Themes
-        </Link>
-        <Link
-          href='/colors'
-          className={cn(
-            'transition-colors hover:text-foreground/80',
-            pathname?.startsWith('/colors')
-              ? 'text-foreground'
-              : 'text-foreground/80'
-          )}
-        >
-          Colors
-        </Link> */}
+        {!data?.me.user && (
+          <>
+            <Link
+              href='/register'
+              className={cn(
+                'transition-colors hover:text-foreground/80',
+                pathname?.startsWith('/register')
+                  ? 'text-foreground'
+                  : 'text-foreground/80'
+              )}
+            >
+              Register
+            </Link>
+            <Link
+              href='/login'
+              className={cn(
+                'transition-colors hover:text-foreground/80',
+                pathname?.startsWith('/login')
+                  ? 'text-foreground'
+                  : 'text-foreground/80'
+              )}
+            >
+              Login
+            </Link>
+          </>
+        )}
       </nav>
     </div>
   );
