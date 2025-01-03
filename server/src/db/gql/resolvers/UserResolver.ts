@@ -12,7 +12,7 @@ import {
 import { Post } from '../models/Post';
 import { User } from '../models/User';
 import { Context } from '../../../context';
-import { PostCreateInput } from './PostResolver';
+// import { PostCreateInput } from './PostResolver';
 import argon2 from 'argon2';
 
 @ObjectType()
@@ -151,6 +151,7 @@ export class UserResolver {
       };
     }
 
+    console.log(req.session, 'UserResolver.ts login 🚀');
     req.session.userId = user.id;
 
     return { user };
@@ -158,22 +159,36 @@ export class UserResolver {
 
   @Query(() => UserResponse)
   async me(@Ctx() { prisma, req }: Context) {
-    if (!req.session.userId) {
+console.log(req.session, 'UserResolver.ts 🚀');
+if (!req.session.userId) {
+  return {
+    errors: [
+      {
+        message: 'User not authenticated',
+        field: 'user',
+      },
+    ],
+  };
+}
+
+const user = await prisma.user.findUnique({
+  where: {
+    id: req.session.userId,
+  },
+});
+
+    if (!user) {
       return {
         errors: [
           {
-            message: 'User not authenticated',
+            message: 'User not found',
             field: 'user',
           },
         ],
       };
     }
 
-    return prisma.user.findUnique({
-      where: {
-        id: req.session.userId,
-      },
-    });
+    return { user };
   }
 
   @Query(() => [User])

@@ -1,14 +1,9 @@
 'use client';
 
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { useState, useEffect, useMemo } from 'react';
-import {
-  UrqlProvider,
-  ssrExchange,
-  cacheExchange,
-  fetchExchange,
-  createClient,
-} from '@urql/next';
+import { useState, useEffect } from 'react';
+import { Provider } from 'urql';
+import { client, ssrCache } from '@/urqlClient';
 
 function ThemeProvider({
   children,
@@ -20,25 +15,12 @@ function ThemeProvider({
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
-  const [client, ssr] = useMemo(() => {
-    const ssr = ssrExchange({
-      isClient: typeof window !== 'undefined',
-    });
-    const client = createClient({
-      url: 'http://localhost:3050/graphql',
-      exchanges: [cacheExchange, ssr, fetchExchange],
-      suspense: true,
-    });
-
-    return [client, ssr];
-  }, []);
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return <>{children}</>; // Render children without ThemeProvider during SSR
+    return null;
   }
 
   return (
@@ -48,9 +30,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <UrqlProvider client={client} ssr={ssr}>
-        {children}
-      </UrqlProvider>
+      <Provider value={client}>{children}</Provider>
     </ThemeProvider>
   ); // Wrap children with ThemeProvider after mount
 }

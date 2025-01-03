@@ -14,49 +14,38 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/hooks/use-toast';
 import { Button } from '../ui/button';
 import { PasswordInput } from '../ui/password-input';
 import { useState } from 'react';
-import { useMutation, useQuery } from 'urql';
-import { Register } from '@/graphql/mutations/register';
-import { toast } from '@/hooks/use-toast';
+import { useMutation } from 'urql';
+import { Login } from '@/graphql/mutations/login';
 
-const profileRegisterSchema = z
-  .object({
-    username: z.string().min(2).max(30),
-    password: z.string().min(6),
-    repeatPassword: z.string().min(6),
-  })
-  .superRefine(({ repeatPassword, password }, ctx) => {
-    if (repeatPassword !== password) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'The passwords did not match',
-        path: ['repeatPassword'],
-      });
-    }
-  });
-
-type ProfileFormValues = z.infer<typeof profileRegisterSchema>;
+const loginSchema = z.object({
+  username: z.string().min(2).max(30),
+  password: z.string().min(6),
+});
 
 // This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
+const defaultValues: Partial<LoginFormValues> = {
   username: '',
   password: '',
-  repeatPassword: '',
 };
 
-export function ProfileForm() {
-  const [loading, setLoading] = useState(false);
-  const [state, executeMutation] = useMutation(Register);
+type LoginFormValues = z.infer<typeof loginSchema>;
 
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileRegisterSchema),
+export function LoginForm() {
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues,
     mode: 'onChange',
   });
 
-  async function onSubmit(data: ProfileFormValues) {
+  const [state, executeMutation] = useMutation(Login);
+
+  async function onSubmit(data: LoginFormValues) {
     setLoading(true);
     const dataToSubmit = {
       username: data.username,
@@ -95,12 +84,9 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder='user0' {...field} />
+                <Input placeholder='username' {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
-              </FormDescription>
+              <FormDescription>Enter your username.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -114,31 +100,14 @@ export function ProfileForm() {
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
-              <FormDescription>
-                Your password must be at least 6 characters long.
-              </FormDescription>
+              <FormDescription>Enter your password.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name='repeatPassword'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Repeat password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder='********' {...field} />
-              </FormControl>
-              <FormDescription>
-                Please enter your password again.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <Button disabled={loading} type='submit'>
-          Register
+          Login
         </Button>
       </form>
     </Form>
