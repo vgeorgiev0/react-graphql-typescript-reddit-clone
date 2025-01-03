@@ -8,10 +8,10 @@ export const Me = gql`
         message
       }
       user {
-        createdAt
-        id
-        updatedAt
         username
+        id
+        createdAt
+        updatedAt
       }
     }
   }

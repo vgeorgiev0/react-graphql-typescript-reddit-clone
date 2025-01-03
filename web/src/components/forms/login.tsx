@@ -20,6 +20,7 @@ import { PasswordInput } from '../ui/password-input';
 import { useState } from 'react';
 import { useMutation } from 'urql';
 import { Login } from '@/graphql/mutations/login';
+import { toErrorMap } from '@/lib/utils';
 
 const loginSchema = z.object({
   username: z.string().min(2).max(30),
@@ -43,6 +44,8 @@ export function LoginForm() {
     mode: 'onChange',
   });
 
+  const { control, handleSubmit, setError } = form;
+
   const [state, executeMutation] = useMutation(Login);
 
   async function onSubmit(data: LoginFormValues) {
@@ -56,23 +59,29 @@ export function LoginForm() {
     const response = await executeMutation({
       data: dataToSubmit,
     });
-    console.log(response);
-    setTimeout(() => {
-      toast({
-        title: 'You submitted the following values:',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-            <code className='text-white'>
-              {JSON.stringify(dataToSubmit, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
-      setLoading(false);
-    }, 1000);
-  }
 
-  const { control, handleSubmit } = form;
+    if (response.data?.login.errors) {
+      const errorMap = toErrorMap(response.data.login.errors);
+      Object.keys(errorMap).forEach((field) => {
+        setError(field as keyof LoginFormValues, {
+          type: 'validate',
+          message: errorMap[field],
+        });
+      });
+      return;
+    }
+    toast({
+      title: 'You have successfully logged in!',
+      description: (
+        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+          <code className='text-white'>
+            {JSON.stringify(data.username, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+    setLoading(false);
+  }
 
   return (
     <Form {...form}>

@@ -73,7 +73,7 @@ export class UserResolver {
         ],
       };
     }
-    if (data.password.length <= 6) {
+    if (data.password.length <= 5) {
       //TODO: Add password validation
       return {
         errors: [

@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useMutation, useQuery } from 'urql';
 import { Register } from '@/graphql/mutations/register';
 import { toast } from '@/hooks/use-toast';
+import { toErrorMap } from '@/lib/utils';
 
 const profileRegisterSchema = z
   .object({
@@ -56,6 +57,8 @@ export function ProfileForm() {
     mode: 'onChange',
   });
 
+  const { control, handleSubmit, setError } = form;
+
   async function onSubmit(data: ProfileFormValues) {
     setLoading(true);
     const dataToSubmit = {
@@ -67,23 +70,29 @@ export function ProfileForm() {
     const response = await executeMutation({
       data: dataToSubmit,
     });
-    console.log(response);
-    setTimeout(() => {
-      toast({
-        title: 'You submitted the following values:',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-            <code className='text-white'>
-              {JSON.stringify(dataToSubmit, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
-      setLoading(false);
-    }, 1000);
-  }
 
-  const { control, handleSubmit } = form;
+    if (response.data?.register.errors) {
+      const errorMap = toErrorMap(response.data.register.errors);
+      Object.keys(errorMap).forEach((field) => {
+        setError(field as keyof ProfileFormValues, {
+          type: 'validate',
+          message: errorMap[field],
+        });
+      });
+      return;
+    }
+    toast({
+      title: 'You have successfully registered! with the following username',
+      description: (
+        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+          <code className='text-white'>
+            {JSON.stringify(data.username, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+    setLoading(false);
+  }
 
   return (
     <Form {...form}>
